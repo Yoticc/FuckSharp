@@ -20,7 +20,6 @@ public static class FuckSharp
     public static string tS(this long @long) => @long.ToString();
     public static string tS(this nint @nint) => @nint.ToString();
     public static string tS(this nuint @nuint) => @nuint.ToString();
-    public static string? tS(this object @object) => @object.ToString();
     public static string tS(this sbyte @sbyte) => @sbyte.ToString();
     public static string tS(this short @short) => @short.ToString();
     public static string tS(this uint @uint) => @uint.ToString();
@@ -42,7 +41,6 @@ public static class FuckSharp
     public static int tI(this string @string) => int.Parse(@string);
     public static int tI(this nint @nint) => int.Parse(@nint.tS());
     public static int tI(this nuint @nuint) => (int)@nuint;
-    public static int? tI(this object @object) => @object == null ? (int)@object : 0;
     public static int tI(this sbyte @sbyte) => @sbyte;
     public static int tI(this short @short) => @short;
     public static int tI(this uint @uint) => (int)@uint;
@@ -117,5 +115,11 @@ public static class FuckSharp
     public static int sC(this string str, Func<char, bool> predicate) => str.Count(predicate);
     public static int sC(this string str, char predicate) => str.Count(z => z == predicate);
     public static int sC(this string str, string predicate) => str.Count(z => predicate.Contains(z));
+    #endregion
+    #region String
+    public static string R(this string @string, char oldChar, char newChar) => @string.Replace(oldChar, newChar);
+    public static string R(this string @string, string oldChar, char newChar) => @string.Replace(oldChar, newChar.tS());
+    public static string R(this string @string, char oldChar, string newChar) => @string.Replace(oldChar.tS(), newChar);
+    public static string R(this string @string, string oldChar, string newChar) => @string.Replace(oldChar, newChar);
     #endregion
 }
