@@ -6,6 +6,7 @@ public static class FuckSharp
     public static dynamic W { set => Console.Write(value.ToString()); }
     public static string RL { get => Console.ReadLine(); }
     public static char RC { get => Console.ReadLine()[0]; }
+    public static void CC() => Console.Clear();
     public static ConsoleKeyInfo RK { get => Console.ReadKey(); }
     public static void BR() => Console.Write('\n');
     #endregion
@@ -202,7 +203,7 @@ public static class FuckSharp
                 {'+', new(() => bytes[pos]++)}, {'-', new(() => bytes[pos]--)},
                 {'.', new(() => Console.Write(bytes[pos]))}, {',', new(() => bytes[pos] = (byte)Console.ReadLine()[0])}
             };
-            foreach (string z in code.Replace("[", "[|").Split('[').Select(z => z.Split(']').Aggregate((z, v) => new(z.Concat(v.ToArray()).ToArray()))).ToList())
+            foreach (string z in code.Replace("[", "[|").Replace(']', '[').Split('['))
                 if (z[0] == '|')
                     while (bytes[pos] != 0)
                         for (int i = 1; i < z.Length; i++)
