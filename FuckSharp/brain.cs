@@ -190,4 +190,28 @@ public static class FuckSharp
         }
     }
     #endregion
+    #region StandardBrainFuck
+    public class SBF
+    {
+        public byte[] Excute(string code, int allocSize = 30000)
+        {
+            byte[] bytes = new byte[allocSize];
+            short pos = 0;
+            Dictionary<char, Action> types = new(){
+                {'>', new(() => pos++)}, {'<', new(() => pos--)},
+                {'+', new(() => bytes[pos]++)}, {'-', new(() => bytes[pos]--)},
+                {'.', new(() => Console.Write(bytes[pos]))}, {',', new(() => bytes[pos] = (byte)Console.ReadLine()[0])}
+            };
+            foreach (string z in code.Replace("[", "[|").Split('[').Select(z => z.Split(']').Aggregate((z, v) => new(z.Concat(v.ToArray()).ToArray()))).ToList())
+                if (z[0] == '|')
+                    while (bytes[pos] != 0)
+                        for (int i = 1; i < z.Length; i++)
+                            types[z[i]]();
+                else
+                    for (int i = 0; i < z.Length; i++)
+                        types[z[i]]();
+            return bytes;
+        }
+    }
+    #endregion
 }
