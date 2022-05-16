@@ -5,6 +5,7 @@ public static class FuckSharp
     public static dynamic WL { set => Console.WriteLine(value.ToString()); }
     public static dynamic W { set => Console.Write(value.ToString()); }
     public static string RL { get => Console.ReadLine(); }
+    public static char RC { get => Console.ReadLine()[0]; }
     public static ConsoleKeyInfo RK { get => Console.ReadKey(); }
     public static void BR() => Console.Write('\n');
     #endregion
@@ -121,5 +122,72 @@ public static class FuckSharp
     public static string R(this string @string, string oldChar, char newChar) => @string.Replace(oldChar, newChar.tS());
     public static string R(this string @string, char oldChar, string newChar) => @string.Replace(oldChar.tS(), newChar);
     public static string R(this string @string, string oldChar, string newChar) => @string.Replace(oldChar, newChar);
+    public static string bTS(this byte[] bytes) => new string(bytes.Select(z => (char)z).ToArray());
+    #endregion
+    #region BrainFuck
+    public class BF
+    {
+        private int pos = 0;
+        private int allocSize;
+        private MemoryStream stream;
+        public BF(int allocSize)
+        {
+            this.allocSize = allocSize;
+            stream = new MemoryStream(allocSize);
+        }
+        public BF(int allocSize, MemoryStream memoryStream, int pos = 0)
+        {
+            this.allocSize = allocSize;
+            this.pos = pos;
+            stream = memoryStream;
+        }
+        public Stream GS()
+        {
+            stream.Position = 0;
+            return stream;
+        }
+        public string GSUTF8() => GB().bTS();
+        public byte[] GB()
+        {
+            stream.Position = 0;
+            byte[] bytes = new byte[allocSize];
+            stream.Read(bytes, 0, bytes.Length);
+            return bytes;
+            stream.Position = pos;
+        }
+        public BF p { get
+        {
+            W = stream.ReadByte();
+            stream.Position = pos;  
+            return this;
+        }}
+        public BF w{ get
+        {
+            stream.WriteByte((byte)RC);
+            stream.Position = pos;
+            return this;
+        }}
+        public static BF operator /(BF bf, short rem)
+        {
+            byte newByte = (byte)(bf.stream.ReadByte() - rem);
+            bf.stream.Position = bf.pos;
+            bf.stream.WriteByte(newByte);
+            bf.stream.Position = bf.pos;
+            return new(bf.allocSize, bf.stream, bf.pos);
+        }
+        public static BF operator *(BF bf, short add)
+        {
+            byte newByte = (byte)(bf.stream.ReadByte() + add);
+            bf.stream.Position = bf.pos;
+            bf.stream.WriteByte(newByte);
+            bf.stream.Position = bf.pos;
+            return new(bf.allocSize, bf.stream, bf.pos);
+        }
+        public static BF operator %(BF bf, int length)
+        {
+            bf.stream.Position = bf.pos = bf.pos + length;
+            return new(bf.allocSize, bf.stream, bf.pos);
+        }
+    }
     #endregion
 }
