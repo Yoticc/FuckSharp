@@ -194,7 +194,7 @@ public static class FuckSharp
     #region StandardBrainFuck
     public class SBF
     {
-        public byte[] Excute(string code, int allocSize = 30000)
+        public byte[] Execute(string code, int allocSize = 30000)
         {
             byte[] bytes = new byte[allocSize];
             short pos = 0;
