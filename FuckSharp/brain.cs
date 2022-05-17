@@ -158,7 +158,7 @@ public static class FuckSharp
         }
         public BF p { get
         {
-            W = stream.ReadByte();
+            W = (char)stream.ReadByte();
             stream.Position = pos;  
             return this;
         }}
@@ -201,7 +201,7 @@ public static class FuckSharp
             Dictionary<char, Action> types = new(){
                 {'>', new(() => pos++)}, {'<', new(() => pos--)},
                 {'+', new(() => bytes[pos]++)}, {'-', new(() => bytes[pos]--)},
-                {'.', new(() => Console.Write(bytes[pos]))}, {',', new(() => bytes[pos] = (byte)Console.ReadLine()[0])}
+                {'.', new(() => Console.Write((char)bytes[pos]))}, {',', new(() => bytes[pos] = (byte)Console.ReadLine()[0])}
             };
             foreach (string z in code.Replace("[", "[|").Replace(']', '[').Split('['))
                 if (z[0] == '|')
