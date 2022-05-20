@@ -217,7 +217,7 @@ public static class FuckSharp
                 { 93, new(() => point[-9] = (bytes[pos] != 0 ? new(() => point[point[-2]] = point[point[-2] - 1] + 1) : new Action(() => point[-2]--))() is int ? point[point[-2]]-- : point[point[-2]]--)}
             };
             while (point[point[-2]] < code.Length)
-                point[-9] = types[(byte)code[point[point[-2]]]]() is double ? point[point[-2]]++ : point[point[-2]]++;                
+                point[-9] = types[(byte)code[point[point[-2]]]]() is int ? point[point[-2]]++ : point[point[-2]]++;                
             return bytes;
         }
     }
