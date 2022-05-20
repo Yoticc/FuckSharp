@@ -6,6 +6,10 @@ public static class FuckSharp
     public static dynamic W { set => Console.Write(value.ToString()); }
     public static string RL { get => Console.ReadLine(); }
     public static char RC { get => Console.ReadLine()[0]; }
+    public static int CCPX { set => Console.SetCursorPosition(value, Console.CursorTop); }
+    public static int CCPY { set => Console.SetCursorPosition(Console.CursorLeft, value); }
+    public static (int x, int y) CCP { get => Console.GetCursorPosition(); set => Console.SetCursorPosition(value.x, value.y); }
+    public static ConsoleColor CFC { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
     public static void CC() => Console.Clear();
     public static ConsoleKeyInfo RK { get => Console.ReadKey(); }
     public static void BR() => Console.Write('\n');
@@ -158,7 +162,7 @@ public static class FuckSharp
         }
         public BF p { get
         {
-            W = (char)stream.ReadByte();
+            W = stream.ReadByte();
             stream.Position = pos;  
             return this;
         }}
@@ -194,23 +198,34 @@ public static class FuckSharp
     #region StandardBrainFuck
     public class SBF
     {
-        public byte[] Execute(string code, int allocSize = 30000)
+        public byte[] Execute(string code, int allocSize = 30000, int pos = 0)
         {
             byte[] bytes = new byte[allocSize];
-            short pos = 0;
-            Dictionary<char, Action> types = new(){
-                {'>', new(() => pos++)}, {'<', new(() => pos--)},
-                {'+', new(() => bytes[pos]++)}, {'-', new(() => bytes[pos]--)},
-                {'.', new(() => Console.Write((char)bytes[pos]))}, {',', new(() => bytes[pos] = (byte)Console.ReadLine()[0])}
+            Dictionary<int, int> point = new Dictionary<int, int> { { -1, 0 }, { 0, 0 } };
+            int power = 0;
+            Dictionary<char, Action> types = new()
+            {
+                { '>', new(() => pos++) }, { '<', new(() => pos-- ) },
+                { '+', new(() => bytes[pos]++ ) }, { '-', new(() => bytes[pos]--) },
+                { '.', new(() => Console.Write((char)bytes[pos])) }, { ',', new(() => bytes[pos] = (byte)Console.ReadLine()[0]) },
+                { '[', new(() => {
+                    if (bytes[pos] == 0)
+                        do point[-1] += (code[++point[power] - 1] == '[' ? 1 : (code[point[power] - 1] == ']' ? -1 : 0));
+                        while (code[point[power] - 1] != ']' || point[-1] != 0);
+                    else point[++power] = point[power - 1] + 1;
+                    point[power]--;
+                })},
+                { ']', new(() => {
+                    if (bytes[pos] != 0) point[power] = point[power-1]+1;
+                    else power--;
+                    point[power]--;
+                })}
             };
-            foreach (string z in code.Replace("[", "[|").Replace(']', '[').Split('['))
-                if (z[0] == '|')
-                    while (bytes[pos] != 0)
-                        for (int i = 1; i < z.Length; i++)
-                            types[z[i]]();
-                else
-                    for (int i = 0; i < z.Length; i++)
-                        types[z[i]]();
+            while (point[power] < code.Length)
+            {
+                types[code[point[power]]]();                
+                point[power]++;
+            }
             return bytes;
         }
     }
