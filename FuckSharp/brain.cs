@@ -1,21 +1,42 @@
-﻿using System.Numerics;
+﻿global using static FuckSharp;
+using System.Numerics;
 public static class FuckSharp
-{
+{    
     #region Console
     public static dynamic WL { set => Console.WriteLine(value.ToString()); }
     public static dynamic W { set => Console.Write(value.ToString()); }
     public static string RL { get => Console.ReadLine(); }
     public static char RC { get => Console.ReadLine()[0]; }
-    public static int CCPX { set => Console.SetCursorPosition(value, Console.CursorTop); }
-    public static int CCPY { set => Console.SetCursorPosition(Console.CursorLeft, value); }
+    public static int CCPX { set => Console.SetCursorPosition(value, Console.CursorTop); get => Console.CursorLeft; }
+    public static int CCPY { set => Console.SetCursorPosition(Console.CursorLeft, value); get => Console.CursorTop; }
     public static (int x, int y) CCP { get => Console.GetCursorPosition(); set => Console.SetCursorPosition(value.x, value.y); }
     public static ConsoleColor CFC { get => Console.ForegroundColor; set => Console.ForegroundColor = value; }
     public static void CC() => Console.Clear();
     public static ConsoleKeyInfo RK { get => Console.ReadKey(); }
     public static void BR() => Console.Write('\n');
     #endregion
+    #region Generics
+    public static void FA1(int start, int end, Action<int> action)
+    {
+        for (int i = start; i < end; i++)
+            action.Invoke(i);
+    }
+    public static void FA2(int start1, int end1, int start2, int end2, Action<int, int> action)
+    {
+        for (int x = start1; x < end1; x++)
+            for (int y = start2; y < end2; y++)
+                action.Invoke(x, y);
+    }
+    public static void FA3(int start1, int end1, int start2, int end2, int start3, int end3, Action<int, int, int> action)
+    {
+        for (int x = start1; x < end1; x++)
+            for (int y = start2; y < end2; y++)
+                for (int z = start3; z < end3; z++)
+                    action.Invoke(x, y, z);
+    }
+    #endregion
     #region TypeConvert
-        #region String
+    #region String
     public static string tS(this bool @bool) => @bool.ToString();
     public static string tS(this byte @byte) => @byte.ToString();
     public static string tS(this char @char) => @char.ToString();
@@ -116,6 +137,7 @@ public static class FuckSharp
     #endregion
     #region Linq
     public static TResult Ex<TSource, TResult>(this TSource source, Func<TSource, TResult> selector) => selector(source);
+    public static void Ex<TSource>(this TSource source, Action<TSource> action) => action(source);
     public static string sW(this string str, Func<char, bool> predicate) => new string(str.Where(predicate).ToArray());
     public static string sW(this string str, char predicate) => new string(str.Where(z => z == predicate).ToArray());
     public static string sW(this string str, string predicate) => new string(str.Where(z => predicate.Contains(z)).ToArray());
