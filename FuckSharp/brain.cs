@@ -15,6 +15,45 @@ public static class FuckSharp
     public static ConsoleKeyInfo RK { get => Console.ReadKey(); }
     public static void BR() => Console.Write('\n');
     #endregion
+    #region Logic
+    public static void LS(dynamic input, params (dynamic value, Action action)[] logics)
+    {
+        foreach((dynamic value, Action action) logic in logics)
+            if(input == logic.value)
+            {
+                logic.action();
+                return;
+            }
+    }
+    public static TResult rLS<TResult>(dynamic input, params (TResult value, Func<TResult> action)[] logics)
+    {
+        foreach ((TResult value, Func<TResult> action) logic in logics)
+            if (input == logic.value)
+                return logic.action.Invoke();
+        return default;
+    }
+    public static TResult rLS<TSource, TResult>(this TSource input, params (TSource value, Func<TResult> action)[] logics)
+    {
+        foreach ((TSource value, Func<TResult> action) logic in logics)
+            if (input.Equals(logic.value))
+                return logic.action.Invoke();
+        return default;
+    }
+    public static TResult rLS<TResult>(dynamic input, params (TResult value, TResult output)[] logics)
+    {
+        foreach ((TResult value, TResult output) logic in logics)
+            if (input == logic.value)
+                return logic.output;
+        return default;
+    }
+    public static TResult rLS<TSource, TResult>(this TSource input, params (TSource value, TResult output)[] logics)
+    {
+        foreach ((TSource value, TResult output) logic in logics)
+            if (input.Equals(logic.value))
+                return logic.output;
+        return default;
+    }
+    #endregion
     #region Generics
     public static void FA1(int start, int end, Action<int> action)
     {
@@ -32,6 +71,24 @@ public static class FuckSharp
         for (int x = start1; x < end1; x++)
             for (int y = start2; y < end2; y++)
                 for (int z = start3; z < end3; z++)
+                    action.Invoke(x, y, z);
+    }
+    public static void FA1(int end, Action<int> action)
+    {
+        for (int i = 0; i < end; i++)
+            action.Invoke(i);
+    }
+    public static void FA2(int end1, int end2, Action<int, int> action)
+    {
+        for (int x = 0; x < end1; x++)
+            for (int y = 0; y < end2; y++)
+                action.Invoke(x, y);
+    }
+    public static void FA3(int end1, int end2, int end3, Action<int, int, int> action)
+    {
+        for (int x = 0; x < end1; x++)
+            for (int y = 0; y < end2; y++)
+                for (int z = 0; z < end3; z++)
                     action.Invoke(x, y, z);
     }
     #endregion
